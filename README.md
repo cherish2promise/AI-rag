@@ -1,10 +1,10 @@
-# 🧠 AI 면접관 시스템 (AI Interviewer Agent v2.0)
+#  AI 면접관 시스템 (AI Interviewer Agent v2.0)
 
 LangChain, OpenAI, LangGraph, ChromaDB 등을 활용하여 이력서 기반 질문 생성 → 답변 평가 → 자동 보고서 생성까지 자동화한 LLM 기반 인터뷰 시스템입니다.
 
 ---
 
-## 📌 주요 기능
+##  주요 기능
 
 | 기능 모듈 | 설명 |
 |----------|------|
@@ -19,7 +19,7 @@ LangChain, OpenAI, LangGraph, ChromaDB 등을 활용하여 이력서 기반 질�
 
 ---
 
-## 🧱 사용 기술
+##  사용 기술
 
 - **LangChain + LangGraph**: 인터뷰 흐름 구성 및 상태 분기
 - **OpenAI GPT-4o-mini**: 질문/평가/요약 생성
@@ -27,22 +27,9 @@ LangChain, OpenAI, LangGraph, ChromaDB 등을 활용하여 이력서 기반 질�
 - **Gradio**: 프론트엔드 UI (외부 연동 시)
 
 ---
+## 주의사항
+- OpenAI API 키 필요 (ChatOpenAI 사용 시)
+- Gradio UI 연동은 선택적 (함수 기반 CLI 실행 가능)
+- ChromaDB는 collection_name="interview_qa"로 설정됨
 
-## 🧪 실행 예시 (로컬 or Colab)
 
-```python
-# 이력서 분석
-state = analyze_resume(state)
-
-# 면접 스타일 설정
-state = set_style(state)
-
-# 질문 생성 + 답변 입력 + 평가 반복
-state = generate_question_strategy(state)
-state = generate_question(state)
-state["current_answer"] = "이런 식으로 답변을 입력합니다."
-state = evaluate_answer(state)
-
-# 흐름 분기 및 요약 리포트 생성
-state = direction(state)
-state = summarize_interview(state)
