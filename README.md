@@ -33,7 +33,6 @@ LangChain, OpenAI, LangGraph, ChromaDB 등을 활용하여 이력서 기반 질�
 - ChromaDB는 collection_name="interview_qa"로 설정됨
 
 
-### 🔹 Step 3
 ```python
 import pandas as pd
 import numpy as np
@@ -58,9 +57,9 @@ from langchain_community.vectorstores import Chroma
 from langgraph.graph import StateGraph, START, END
 ```
 **설명:**
-- 
+- 모든 필요한 라이브러리를 다운합니다.
 
-### 🔹 Step 4
+
 ```python
 def load_api_keys(filepath="api_key.txt"):
     with open(filepath, "r") as f:
@@ -75,16 +74,14 @@ path = '/content/drive/MyDrive/aivle/project_genai/'
 load_api_keys(path + 'api_key.txt')
 ```
 **설명:**
-- 
+-  환경 변수 설정
 
-### 🔹 Step 5
+
 ```python
 print(os.environ['OPENAI_API_KEY'][:30])
 ```
-**설명:**
-- 
 
-### 🔹 Step 6
+
 ```python
 def extract_text_from_file(file_path: str) -> str:
     ext = os.path.splitext(file_path)[1].lower()
@@ -103,24 +100,17 @@ def extract_text_from_file(file_path: str) -> str:
         raise ValueError("지원하지 않는 파일 형식입니다. PDF 또는 DOCX만 허용됩니다.")
 ```
 **설명:**
-- 
+-  resume 를 읽습니다.
 
-### 🔹 Step 7
-```python
-file_path = path + 'Resume_sample.pdf'
-```
-**설명:**
-- 
 
-### 🔹 Step 8
+
+
 ```python
 resume_text = extract_text_from_file(file_path)
 resume_text
 ```
-**설명:**
-- 
 
-### 🔹 Step 9
+
 ```python
 from typing import TypedDict, List, Dict
 
@@ -150,9 +140,9 @@ class InterviewState(TypedDict):
     tot_opinion :str
 ```
 **설명:**
-- 
+- 저장할 생성자 선언
 
-### 🔹 Step 10
+
 ```python
 initial_state: InterviewState = {
     "resume_text": resume_text,
@@ -175,10 +165,7 @@ initial_state: InterviewState = {
 
 initial_state
 ```
-**설명:**
-- 
 
-### 🔹 Step 11
 ```python
 def analyze_resume(state: InterviewState) -> InterviewState:
     resume_text = state.get("resume_text", "")
@@ -216,9 +203,9 @@ def analyze_resume(state: InterviewState) -> InterviewState:
     }
 ```
 **설명:**
-- 
+- 키워드 추출 프롬프트를 통해 AI에 전달합니다.
 
-### 🔹 Step 12
+
 ```python
 import random
 styler=["구조화 면접","비구조화 면접", "역량 기반 면접","상황 기반 면접","기술 면접","케이스 면접"]
@@ -232,9 +219,9 @@ def set_style(state: InterviewState) -> InterviewState:
     }
 ```
 **설명:**
-- 
+- 면접 스타일을 정합니다.
 
-### 🔹 Step 13
+
 ```python
 i=0
 
@@ -277,10 +264,8 @@ def generate_question_strategy(state: InterviewState) -> InterviewState:
         "question_strategy": strategy_dict
     }
 ```
-**설명:**
-- 
 
-### 🔹 Step 14
+
 ```python
 def preProcessing_Interview(file_path: str) -> InterviewState:
     # 1. 텍스트 추출
@@ -327,17 +312,8 @@ def preProcessing_Interview(file_path: str) -> InterviewState:
     }
 ```
 **설명:**
-- 
+- 질문 전략을 사전에 정합니다.
 
-### 🔹 Step 15
-```python
-state=preProcessing_Interview(file_path)
-state
-```
-**설명:**
-- 
-
-### 🔹 Step 16
 ```python
 def update_current_answer(state: InterviewState) -> InterviewState:
 
@@ -347,9 +323,9 @@ def update_current_answer(state: InterviewState) -> InterviewState:
     }
 ```
 **설명:**
-- 
+- 사용자의 답을 AI에 전달합니다.
 
-### 🔹 Step 17
+
 ```python
 def evaluate_answer(state: InterviewState) -> InterviewState:
     from typing import List, Dict
@@ -436,17 +412,11 @@ def evaluate_answer(state: InterviewState) -> InterviewState:
     }
 ```
 **설명:**
-- 
+-  답변을 평가합니다.
 
-### 🔹 Step 18
-```python
-state=evaluate_answer(state)
-state['evaluation']
-```
-**설명:**
-- 
 
-### 🔹 Step 19
+
+
 ```python
 def reflection(state: InterviewState) -> InterviewState:
     llm = ChatOpenAI(temperature=0.2, model="gpt-4o-mini")
@@ -492,25 +462,11 @@ def reflection(state: InterviewState) -> InterviewState:
     }
 ```
 **설명:**
-- 
+-  평가를 평가합니다.
 
-### 🔹 Step 20
-```python
-state = reflection(state)
-state
-```
-**설명:**
-- 
 
-### 🔹 Step 21
-```python
-state=evaluate_answer(state)
-state
-```
-**설명:**
-- 
 
-### 🔹 Step 22
+
 ```python
 def direction(state: InterviewState) -> InterviewState:
     status = state.get("reflection_status", "").strip()
@@ -530,55 +486,9 @@ def direction(state: InterviewState) -> InterviewState:
     }
 ```
 **설명:**
-- 
+- 정상일경우는 generate_question 새 질문 생성  reflection 아닐경우 다시한번 답변 평가 summarize_interview 모든 평가가 완료되었다면 
 
-### 🔹 Step 23
-```python
-state['evaluation']
-```
-**설명:**
-- 
 
-### 🔹 Step 24
-```python
-state=direction(state)
-state['next_step']
-```
-**설명:**
-- 
-
-### 🔹 Step 25
-```python
-
-```
-**설명:**
-- 
-
-### 🔹 Step 26
-```python
-state=generate_question(state)
-state
-```
-**설명:**
-- 
-
-### 🔹 Step 27
-```python
-state["current_answer"]="알고리즘을 잘 선정하지 못하겠습니다."
-state=update_current_answer(state)
-state=evaluate_answer(state)
-```
-**설명:**
-- 
-
-### 🔹 Step 28
-```python
-state
-```
-**설명:**
-- 
-
-### 🔹 Step 29
 ```python
 def summarize_interview(state: InterviewState) -> InterviewState:
     llm = ChatOpenAI(temperature=0.3, model="gpt-4o-mini")
@@ -692,17 +602,8 @@ def summarize_interview(state: InterviewState) -> InterviewState:
     }
 ```
 **설명:**
-- 
+- 이력서 생성
 
-### 🔹 Step 30
-```python
-state = summarize_interview(state)
-state
-```
-**설명:**
-- 
-
-### 🔹 Step 31
 ```python
 # 6) Agent --------------------
 # 분기 판단 함수
@@ -736,10 +637,7 @@ graph.add_edge("summarize_interview", END)
 # 최종 빌드
 interview_app = graph.compile()
 ```
-**설명:**
-- 
 
-### 🔹 Step 32
 ```python
 # 파일 입력
 file_path = path + 'Resume_sample.pdf'
@@ -747,15 +645,11 @@ i=0
 state_s = preProcessing_Interview(file_path)
 state_s
 ```
-**설명:**
-- 
 
-### 🔹 Step 33
 ```python
 # 사용자 응답 루프
 state_s = interview_app.invoke(state_s)
 ```
-**설명:**
-- 
+
 
 
